@@ -10,16 +10,20 @@ typedef struct
     int id;
     char marca[MAX_MARCA];
     char modelo[MAX_MODELO];
-    char tipo[MAX_TIPO]; // camioneta, auto, etc.
+    char tipo[MAX_TIPO];
     int ano;
     float precio;
-    int usado;      // 1 = usado, 0 = nuevo
-    int disponible; // 1 = disponible, 0 = vendido
+    int usado;
+    int disponible;
 } Vehiculo;
 
 void agregarVehiculo();
 void listarVehiculos();
 void buscarVehiculosPreferencias(char marca[], char tipo[], int usado, float presupuesto);
 Vehiculo *obtenerVehiculoPorID(int id);
+
+// NUEVO
+void cargarVehiculos();
+void guardarVehiculos();
 
 #endif

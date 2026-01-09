@@ -7,6 +7,28 @@
 Vehiculo inventario[MAX_VEHICULOS];
 int totalVehiculos = 0;
 
+void cargarVehiculos()
+{
+    FILE *f = fopen("vehiculos.dat", "rb");
+    if (f == NULL)
+        return;
+
+    fread(&totalVehiculos, sizeof(int), 1, f);
+    fread(inventario, sizeof(Vehiculo), totalVehiculos, f);
+    fclose(f);
+}
+
+void guardarVehiculos()
+{
+    FILE *f = fopen("vehiculos.dat", "wb");
+    if (f == NULL)
+        return;
+
+    fwrite(&totalVehiculos, sizeof(int), 1, f);
+    fwrite(inventario, sizeof(Vehiculo), totalVehiculos, f);
+    fclose(f);
+}
+
 void agregarVehiculo()
 {
     Vehiculo v;
@@ -18,7 +40,7 @@ void agregarVehiculo()
     printf("Modelo: ");
     scanf("%s", v.modelo);
 
-    printf("Tipo (auto/camioneta): ");
+    printf("Tipo: ");
     scanf("%s", v.tipo);
 
     printf("Ano: ");
@@ -27,13 +49,15 @@ void agregarVehiculo()
     printf("Precio: ");
     scanf("%f", &v.precio);
 
-    printf("Es usado? (1 = si, 0 = no): ");
+    printf("Usado? (1=si, 0=no): ");
     scanf("%d", &v.usado);
 
     v.disponible = 1;
 
     inventario[totalVehiculos++] = v;
-    printf("Vehiculo agregado correctamente.\n");
+    guardarVehiculos();
+
+    printf("Vehiculo guardado en archivo.\n");
 }
 
 void listarVehiculos()
@@ -43,11 +67,10 @@ void listarVehiculos()
     {
         if (inventario[i].disponible)
         {
-            printf("ID:%d | %s %s | %s | $%.2f\n",
+            printf("ID:%d | %s %s | $%.2f\n",
                    inventario[i].id,
                    inventario[i].marca,
                    inventario[i].modelo,
-                   inventario[i].tipo,
                    inventario[i].precio);
         }
     }
@@ -55,7 +78,6 @@ void listarVehiculos()
 
 void buscarVehiculosPreferencias(char marca[], char tipo[], int usado, float presupuesto)
 {
-    printf("\n--- RESULTADOS SEGUN PREFERENCIAS ---\n");
     for (int i = 0; i < totalVehiculos; i++)
     {
         if (inventario[i].disponible &&
